@@ -1,46 +1,42 @@
-document.querySelector("button[id='Paste_Data']").addEventListener('click', () => {
+document.querySelector('#Launch').addEventListener('click', () => {
+	chrome.storage.local.get(['keywords'], CS => {
+		if (CS.keywords) {
+			const query = { active: true, currentWindow: true };
+			function callback(tabs) {
+				const currentTab = tabs[0];
+				chrome.scripting.executeScript(
+					{
+						target: { tabId: currentTab.id },
+						files: ['scripts/youtube-watcher.js']
+					},
+					() => { console.log("Executed Script") });
+			}
 
-    const query = { active: true, currentWindow: true };
-    chrome.tabs.query(query, (tabs) => {
-        const currentTab = tabs[0];
-        chrome.tabs.executeScript(currentTab.id, { file: 'scripts/paste-data.js' });
-    })
+			chrome.tabs.query(query, callback);
+		}
+	})
 })
 
-const setListUI = async () => {
-    const listData = document.querySelector('[name="selectedList"]');
-    chrome.storage.local.get(['characteristics'], (data) => {
-        Object.keys(data.characteristics).forEach(item => {
-            let option = document.createElement("option");
-            option.value = item;
-            option.text = item + "\n" + data.characteristics[item];
-            listData.add(option);
-        })
-    });
-};
-
-setListUI();
-
-document.querySelector("button[id='Get_Data']").addEventListener('click', () => {
-
-    const query = { active: true, currentWindow: true };
-    chrome.tabs.query(query, (tabs) => {
-        const currentTab = tabs[0];
-        chrome.tabs.executeScript(currentTab.id, { file: 'scripts/image-download.js' });
-    })
-    updateData();
+document.querySelector('#Save_Keywords').addEventListener('click', () => {
+	const keywords = document.querySelector('#keywords').value;
+	if (keywords) {
+		chrome.storage.local.set({
+			keywords: keywords
+		})
+	}
 })
 
-document.querySelector("button[id='RESET']").addEventListener('click', () => {
 
-    chrome.storage.local.set({ characteristics: {} })
-    updateData();
-})
+const setKeywords = () => {
+	chrome.storage.local.get(['keywords'], CS => {
+		if (CS.keywords) {
+			document.querySelector('#keywords').value = CS.keywords;
+		}
 
-const updateData = () => {
-    document.querySelector('[name="selectedList"]').innerHTML = '';
+	})
 }
 
+setKeywords();
 
 
 

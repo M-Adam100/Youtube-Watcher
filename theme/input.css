@@ -4,9 +4,6 @@ input, select, textarea {
 	display: inline-block;
 	margin: 0 0 10px 0;
 	height: 30px;
-	padding-left: 12.5px;
-	padding-right: 12.5px;
-	padding-top: 7.5px;
 	padding-bottom: 7.5px;
 	width: 100%;
 	box-sizing : border-box;
