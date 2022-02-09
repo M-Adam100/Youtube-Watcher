@@ -17,26 +17,30 @@ document.querySelector('#Launch').addEventListener('click', () => {
 	})
 })
 
-document.querySelector('#Save_Keywords').addEventListener('click', () => {
+document.querySelector('#Save').addEventListener('click', () => {
 	const keywords = document.querySelector('#keywords').value;
+	const delay = document.querySelector('#delay').value;
 	if (keywords) {
 		chrome.storage.local.set({
-			keywords: keywords
+			keywords: keywords,
+			delay: delay
+
 		})
 	}
 })
 
 
-const setKeywords = () => {
-	chrome.storage.local.get(['keywords'], CS => {
+const setValues = () => {
+	chrome.storage.local.get(['keywords', 'delay'], CS => {
 		if (CS.keywords) {
 			document.querySelector('#keywords').value = CS.keywords;
+			document.querySelector('#delay').value = CS.delay;
 		}
 
 	})
 }
 
-setKeywords();
+setValues();
 
 
 

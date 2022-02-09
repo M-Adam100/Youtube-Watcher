@@ -1,14 +1,53 @@
 (async () => {
-    chrome.storage.local.get(['keywords'], CS => {
-        console.log(CS);
-        const keywords = CS.keywords.split(',');
-        console.log(keywords);
+    const sleep = (ms) => {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    const setInputValue = async (element, value) => {
+        return new Promise(async (resolve, reject) => {
+            await sleep(2000);
+            element.value = value;
+            element.dispatchEvent(new Event('input', { bubbles: true }));
+            element.dispatchEvent(new InputEvent('change', { bubbles: true }));
+            element.dispatchEvent(new FocusEvent('blur', { bubbles: true }))
+            resolve(true);
+        })
+    }
+
+    const readLocalStorage = async (key) => {
+        return new Promise((resolve, reject) => {
+          chrome.storage.local.get([key], function (result) {
+            if (result[key] === undefined) {
+              reject();
+            } else {
+              resolve(result[key]);
+            }
+          });
+        });
+      };
+
+    const getFirstVideo = () => {
+        return new Promise((resolve, reject) => {
+            const interval = setInterval(() => {
+                if (document.querySelector('ytd-video-renderer') && window.location.href.includes('search') && !document.querySelector('ytd-search').hidden) {
+                    clearInterval(interval);
+                    await sleep(2500);
+                    document.querySelector('ytd-video-renderer').querySelector('a').click();
+                    resolve(true);
+                } else {
+                    document.querySelector('#search-icon-legacy').dispatchEvent(new PointerEvent('click', { bubbles: true }))
+                }
+            }, 2000)
+        })
+    }
+        const keywordsString = await readLocalStorage('keywords');
+        const delay = Number(await readLocalStorage('delay'));
+        const keywords = keywordsString.split(',');
         for (let i = 0; i < keywords.length; i++) {
             const youtubeSearchBox = document.querySelector('ytd-searchbox');
             const input = youtubeSearchBox.querySelector('#search');
-            input.value = keywords[i];
-            input.dispatchEvent(new Event('input', {bubbles: true}))
-            youtubeSearchBox.querySelector('#search-icon-legacy').click();
+            await setInputValue(input, keywords[i]);
+            await getFirstVideo();
+            await sleep((delay*1000)*60);
         }
-    })
 })()
