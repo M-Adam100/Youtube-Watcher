@@ -4,7 +4,6 @@ chrome.runtime.onInstalled.addListener(async () => {
 
 
 chrome.runtime.onMessage.addListener((request) => {
-    console.log(request)
     if (request.message == "CLEAR") {
         chrome.cookies.getAll({domain: "youtube.com"}, function(cookies) {
             for(var i=0; i<cookies.length;i++) {

@@ -7,6 +7,9 @@
       chrome.runtime.sendMessage({
           message: 'CLEAR'
       })
+      Object.keys(localStorage).forEach(key => {
+          localStorage.removeItem(key);
+      })
     }
 
     const setInputValue = async (element, value) => {
