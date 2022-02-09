@@ -26,9 +26,9 @@
         });
       };
 
-    const getFirstVideo = () => {
-        return new Promise((resolve, reject) => {
-            const interval = setInterval(() => {
+    const getFirstVideo = async () => {
+        return new Promise(async (resolve, reject) => {
+            const interval = setInterval(async () => {
                 if (document.querySelector('ytd-video-renderer') && window.location.href.includes('search') && !document.querySelector('ytd-search').hidden) {
                     clearInterval(interval);
                     await sleep(2500);
