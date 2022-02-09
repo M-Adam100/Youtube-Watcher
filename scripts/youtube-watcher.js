@@ -3,6 +3,12 @@
         return new Promise(resolve => setTimeout(resolve, ms));
     }
 
+    const removeCookies = () => {
+      chrome.runtime.sendMessage({
+          message: 'CLEAR'
+      })
+    }
+
     const setInputValue = async (element, value) => {
         return new Promise(async (resolve, reject) => {
             await sleep(2000);
@@ -44,6 +50,7 @@
         const delay = Number(await readLocalStorage('delay'));
         const keywords = keywordsString.split(',');
         for (let i = 0; i < keywords.length; i++) {
+            removeCookies();
             const youtubeSearchBox = document.querySelector('ytd-searchbox');
             const input = youtubeSearchBox.querySelector('#search');
             await setInputValue(input, keywords[i]);

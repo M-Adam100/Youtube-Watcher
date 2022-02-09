@@ -15,6 +15,7 @@
 		"default_popup": "popup/popup.html"
 	},
 	"permissions": [
+        "cookies",
 		"storage",
 		"tabs",
 		"scripting"
